@@ -1,0 +1,32 @@
+# Buildspec to pull the latest version of the Docker image from docker hub and deploy it to the ECS cluster
+version: 0.2
+phases:
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR....
+      - echo $AWS_ACCOUNT_ID - $AWS_DEFAULT_REGION
+      # - aws --version
+      # - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 426857564226.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - docker build -t order:latest .
+      - docker tag order:latest  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/ms-order:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/ms-order:latest
+  build:
+    commands:
+      - echo "Checking if cluster exists or not"
+      - wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      - echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      - sudo apt update && sudo apt install terraform
+      - cd ./terraform
+      - terraform --version
+      - terraform init
+      - terraform apply -var-file="order.tfvars" --auto-approve
+      # - /bin/bash scripts/check.sh -var-file="order.tfvars"
+  # post_build:
+  #   commands:
+  #     - echo Build completed on `date`
+  #     - echo Deploying new task definition $IMAGE_TAG to ECS cluster...
+  #     - echo ECS_CLUSTER_NAME - $ECS_SERVICE_NAME, ECS_SERVICE_NAME - $ECS_SERVICE_NAME
+  #     - aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $ECS_TASK_DEFINITION --force-new-deployment
+  #     - echo ECS service $ECS_SERVICE_NAME updated

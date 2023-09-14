@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            border: 1px solid #ddd;
+            margin: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            font-size: 1.2em;
+            margin: 0;
+        }
+        p {
+            margin: 5px 0;
+        }
+        form {
+            display: inline-block;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Products List</h1>
+    <ul>
+        <% products.forEach(product => { %>
+            <li>
+                <h2><%= product.name %></h2>
+                <p>Price: $<%= product.price %></p>
+                <p><%= product.description %></p>
+                <form action="/orders/create" method="post">
+                    <input type="hidden" name="productId" value="<%= product.id %>">
+                    <input type="hidden" name="productName" value="<%= product.name %>">
+                    <input type="hidden" name="price" value="<%= product.price %>">
+                    <button type="submit">Buy</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+</body>
+</html>
