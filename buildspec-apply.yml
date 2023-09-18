@@ -1,4 +1,4 @@
-# Buildspec to pull the latest version of the Docker image from docker hub and deploy it to the ECS cluster
+#Buildspec to provision ecs service through terraform
 version: 0.2
 phases:
 
