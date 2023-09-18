@@ -13,7 +13,7 @@ phases:
       - image_id=$(docker images | grep "order" | awk '{print $3}' | cut -c1-5)
       - docker tag order:latest  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id
-      - printf 'imageurl="%s"' "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id" > ./terraform/imageurl.tfvars
+      - printf 'imageurl="%s"' "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id" > imageurl.tfvars
   build:
     commands:
       - echo "Checking if cluster exists or not"
