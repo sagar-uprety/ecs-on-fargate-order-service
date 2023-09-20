@@ -77,10 +77,20 @@ module "order_service" {
       memory    = 1024
       essential = true
       image     = var.imageurl
-      environment = [
-        { "name" : "userServiceURL", "value" : "http://user:3000" },
-        { "name" : "productServiceURL", "value" : "http://product:3001" }
+      secrets = [
+        {
+          name      = "userServiceURL"
+          valueFrom = data.aws_ssm_parameter.user_ssm.arn
+        },
+        {
+          name      = "productServiceURL"
+          valueFrom = data.aws_ssm_parameter.product_ssm.arn
+        }
       ]
+      # environment = [
+      #   { "name" : "userServiceURL", "value" : "http://user:3000" },
+      #   { "name" : "productServiceURL", "value" : "http://product:3001" }
+      # ]
       port_mappings = [
         {
           name          = local.container_name
@@ -137,6 +147,14 @@ module "order_service" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
+}
+
+data "aws_ssm_parameter" "user_ssm" {
+  name = "userServiceURL"
+}
+
+data "aws_ssm_parameter" "product_ssm" {
+  name = "productServiceURL"
 }
 
 resource "aws_iam_role_policy" "task_definition_role-policy" {

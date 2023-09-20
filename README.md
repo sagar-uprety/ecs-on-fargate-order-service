@@ -588,6 +588,8 @@ This workflow incorporates Terraform, Checkov, tfsec, and Infracost to validate,
 | Name | Type |
 |------|------|
 | [aws_iam_role_policy.task_definition_role-policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_ssm_parameter.product_ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
+| [aws_ssm_parameter.user_ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
 | [terraform_remote_state.base_resources](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
