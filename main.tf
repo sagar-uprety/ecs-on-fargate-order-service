@@ -15,25 +15,59 @@ data "terraform_remote_state" "base_resources" {
 }
 
 module "order_service" {
-  source                 = "terraform-aws-modules/ecs/aws//modules/service"
-  version                = "5.2.2"
-  name                   = local.name
-  family                 = local.name #unique name for task defination
-  cluster_arn            = data.terraform_remote_state.base_resources.outputs.ecs_cluster_arn
-  launch_type            = "FARGATE"
-  cpu                    = 1024
-  memory                 = 2048
-  create_iam_role        = true # ECS Service IAM Role: Allows Amazon ECS to make calls to your load balancer on your behalf.
-  create_task_definition = true
-  create_security_group  = true
-  create_tasks_iam_role  = true #ECS Task Role
-  desired_count          = 1
-  enable_autoscaling     = true
-  enable_execute_command = true
-  force_new_deployment   = false
-
-  network_mode = "awsvpc"
-
+  source                             = "terraform-aws-modules/ecs/aws//modules/service"
+  version                            = "5.2.2"
+  create                             = true # Determines whether resources will be created (affects all resources)
+  name                               = local.name
+  family                             = local.name #unique name for task defination
+  cluster_arn                        = data.terraform_remote_state.base_resources.outputs.ecs_cluster_arn
+  launch_type                        = "FARGATE"
+  cpu                                = 1024
+  memory                             = 2048
+  create_iam_role                    = true # ECS Service IAM Role: Allows Amazon ECS to make calls to your load balancer on your behalf.
+  create_task_definition             = true
+  create_security_group              = true
+  create_tasks_iam_role              = true #ECS Task Role
+  create_task_exec_iam_role          = true
+  create_task_exec_policy            = true #This includes permissions included in AmazonECSTaskExecutionRolePolicy as well as access to secrets and SSM parameters
+  desired_count                      = 1
+  enable_autoscaling                 = true
+  enable_execute_command             = true
+  force_new_deployment               = false
+  ignore_task_definition_changes     = false
+  deployment_minimum_healthy_percent = 66
+  assign_public_ip                   = false
+  network_mode                       = "awsvpc"
+  requires_compatibilities = [
+    "FARGATE"
+  ]
+  runtime_platform = {
+    "cpu_architecture" : "X86_64",
+    "operating_system_family" : "LINUX"
+  }
+  autoscaling_max_capacity = 10
+  autoscaling_min_capacity = 1
+  autoscaling_policies = {
+    "cpu" : {
+      "policy_type" : "TargetTrackingScaling",
+      "target_tracking_scaling_policy_configuration" : {
+        "predefined_metric_specification" : {
+          "predefined_metric_type" : "ECSServiceAverageCPUUtilization"
+        }
+      }
+    },
+    "memory" : {
+      "policy_type" : "TargetTrackingScaling",
+      "target_tracking_scaling_policy_configuration" : {
+        "predefined_metric_specification" : {
+          "predefined_metric_type" : "ECSServiceAverageMemoryUtilization"
+        }
+      }
+    }
+  }
+  task_exec_ssm_param_arns = [
+    "arn:aws:ssm:::parameter/*"
+  ]
 
   # Container definition(s)
   container_definitions = {
@@ -103,13 +137,11 @@ module "order_service" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
-
-  tags = local.tags
 }
 
 resource "aws_iam_role_policy" "task_definition_role-policy" {
   name = "${var.service}-task-definition-role-policy"
-  role = module.order_service.tasks_iam_role_name ##role name from module
+  role = module.order_service.tasks_iam_role_name
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [

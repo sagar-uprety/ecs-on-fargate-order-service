@@ -12,4 +12,4 @@ phases:
     commands:
       - terraform init
       - echo "Applying.."
-      - terraform apply -var-file="order.tfvars" -var-file="imageurl.tfvars" --auto-approve
+      - terraform apply -var-file="dev.tfvars" -var-file="imageurl.tfvars" --auto-approve

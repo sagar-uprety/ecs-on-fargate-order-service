@@ -22,7 +22,7 @@ phases:
       - terraform validate
   post_build:
     commands:
-      - terraform plan -var-file="order.tfvars" -var-file="imageurl.tfvars"
+      - terraform plan -var-file="dev.tfvars" -var-file="imageurl.tfvars"
 
 artifacts:
   files:
