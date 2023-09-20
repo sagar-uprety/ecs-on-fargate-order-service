@@ -66,7 +66,7 @@ module "order_service" {
     }
   }
   task_exec_ssm_param_arns = [
-    "arn:aws:ssm:::parameter/*"
+    "arn:aws:ssm:*:*:parameter/*"
   ]
 
   # Container definition(s)
