@@ -109,7 +109,7 @@ module "order_service" {
 
 resource "aws_iam_role_policy" "task_definition_role-policy" {
   name = "${var.service}-task-definition-role-policy"
-  role = module.order_service.tasks_iam_role_name
+  role = module.order_service.tasks_iam_role_name ##role
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
