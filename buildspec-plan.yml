@@ -6,8 +6,6 @@ phases:
     commands:
       - echo Logging in to Amazon ECR....
       - echo $AWS_ACCOUNT_ID - $AWS_DEFAULT_REGION
-      # - aws --version
-      # - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 426857564226.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - docker build -t order:latest ./app
       - image_id=$CODEBUILD_RESOLVED_SOURCE_VERSION
@@ -16,7 +14,7 @@ phases:
       - printf 'imageurl="%s"' "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id" > imageurl.tfvars
   build:
     commands:
-      - echo "Checking if cluster exists or not"
+      - echo "Installing terraform and running terraform validate.."
       - wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
       - echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
       - sudo apt update && sudo apt install terraform
@@ -28,4 +26,4 @@ phases:
 
 artifacts:
   files:
-    - imageurl.tfvars
+    - '**/*'
