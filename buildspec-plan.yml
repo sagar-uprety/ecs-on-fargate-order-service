@@ -13,7 +13,7 @@ phases:
       - image_id=$CODEBUILD_RESOLVED_SOURCE_VERSION
       - docker tag order:latest  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id
-      - echo imageurl="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id" > imageurl.tfvars
+      - echo "imageurl=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id" > imageurl.tfvars
   build:
     commands:
       - echo "Checking if cluster exists or not"
