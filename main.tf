@@ -89,10 +89,6 @@ module "order_service" {
           valueFrom = data.aws_ssm_parameter.product_ssm.arn
         }
       ]
-      # environment = [
-      #   { "name" : "userServiceURL", "value" : "http://user:3000" },
-      #   { "name" : "productServiceURL", "value" : "http://product:3001" }
-      # ]
       port_mappings = [
         {
           name          = local.container_name
