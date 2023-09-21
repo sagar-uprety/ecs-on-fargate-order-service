@@ -126,7 +126,6 @@ module "order_service" {
     }
   }
 
-
   security_group_rules = {
     alb_ingress_3000 = {
       type                     = "ingress"
@@ -135,6 +134,15 @@ module "order_service" {
       protocol                 = "tcp"
       description              = "order Service Port"
       source_security_group_id = data.terraform_remote_state.base_resources.outputs.security_group_id
+    }
+
+    internal_communication = {
+      type        = "ingress"
+      from_port   = var.container_port
+      to_port     = var.container_port
+      protocol    = "tcp"
+      description = "User Service Port"
+      cidr_blocks = ["10.0.0.0/8", "127.0.0.0/8"]
     }
 
     egress_all = {
