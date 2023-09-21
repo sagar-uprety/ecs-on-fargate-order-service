@@ -73,10 +73,12 @@ module "order_service" {
   container_definitions = {
 
     (var.container_name) = {
-      cpu       = 512
-      memory    = 1024
-      essential = true
-      image     = var.imageurl
+      cpu                      = 512
+      memory                   = 1024
+      essential                = true
+      image                    = var.imageurl
+      interactive              = true
+      readonly_root_filesystem = false
       secrets = [
         {
           name      = "userServiceURL"
