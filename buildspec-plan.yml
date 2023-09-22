@@ -1,0 +1,29 @@
+# Buildspec to pull the latest version of the Docker image from docker hub and deploy it to the ECS cluster also perform terraform plan
+version: 0.2
+phases:
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR....
+      - echo $AWS_ACCOUNT_ID - $AWS_DEFAULT_REGION
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 426857564226.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - docker build -t order:latest ./app
+      - image_id=$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker tag order:latest  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id
+      - printf 'imageurl="%s"' "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/lms-order-ms:$image_id" > imageurl.tfvars
+  build:
+    commands:
+      - echo "Installing terraform and running terraform validate.."
+      - wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      - echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      - sudo apt update && sudo apt install terraform
+      - terraform init
+      - terraform validate
+  post_build:
+    commands:
+      - terraform plan -var-file="dev.tfvars" -var-file="imageurl.tfvars"
+
+artifacts:
+  files:
+    - '**/*'

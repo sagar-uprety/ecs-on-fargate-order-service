@@ -567,29 +567,43 @@ This workflow incorporates Terraform, Checkov, tfsec, and Infracost to validate,
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 4.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.55 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.16.2 |
+| <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_order_service"></a> [order\_service](#module\_order\_service) | terraform-aws-modules/ecs/aws//modules/service | 5.2.2 |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_iam_role_policy.task_definition_role-policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_ssm_parameter.product_ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
+| [aws_ssm_parameter.user_ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
+| [terraform_remote_state.base_resources](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_application"></a> [application](#input\_application) | Name of the application | `string` | `""` | no |
+| <a name="input_container_name"></a> [container\_name](#input\_container\_name) | Name of the container | `string` | n/a | yes |
+| <a name="input_container_port"></a> [container\_port](#input\_container\_port) | value of the container port | `number` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Working application environment eg: dev, stg, prd | `string` | `""` | no |
+| <a name="input_imageurl"></a> [imageurl](#input\_imageurl) | Image Url of the Image REPO | `string` | n/a | yes |
 | <a name="input_owner"></a> [owner](#input\_owner) | Name to be used on all the resources as identifier | `string` | `""` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region be used for all the resources | `string` | `"us-east-1"` | no |
+| <a name="input_service"></a> [service](#input\_service) | Name of the Service | `string` | n/a | yes |
 
 ## Outputs
 
