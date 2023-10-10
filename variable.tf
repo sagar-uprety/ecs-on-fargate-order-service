@@ -30,17 +30,6 @@ variable "service" {
   type        = string
 }
 
-
-variable "container_name" {
-  description = "Name of the container"
-  type        = string
-}
-
-variable "container_port" {
-  description = "value of the container port"
-  type        = number
-}
-
 variable "imageurl" {
   description = "Image Url of the Image REPO"
   type        = string
