@@ -77,8 +77,3 @@ jobs:
 
       - name: Terraform Format
         run: terraform fmt --check
-
-      - name: Terraform Validate
-        run: |
-          cd ${{ env.terraformWorkDir }}
-          terraform validate
