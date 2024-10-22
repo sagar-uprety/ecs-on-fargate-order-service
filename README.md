@@ -78,7 +78,7 @@ The base infrastructure implements a microservices architecture with the followi
 * **`buildspec*.yml`**: Defines the buildspec configuration required by AWS CodeBuild service
 * **`variables.tf`**: Input variables for parameterization and sensitive data
 * **`provider.tf`**: Specifies the AWS provider
-* **`output.tf`**: Defines outputs such as Auto Scaling Group ID and RDS endpoint
+* **`output.tf`**: Defines outputs for the tf configs
 * **`dev.tfvars`**: Variables specific to the dev environment
 * **`versions.tf`**: Terraform version constraints and backend configuration 
 * **`locals.tf`**: local value to be used in main.tf
